@@ -1,0 +1,13 @@
+<resources>
+
+    <string name="app_name">WowME</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main_window">World of Warcraft</string>
+    <string name="NetSettingsHostHint">IP of data station</string>
+    <string name="NetSettingsPortHint">Port of data station</string>
+    <string name="title_section1">Data link</string>
+    <string name="title_activity_settings_view">World of Warcraft Mobile Settings</string>
+    <string name="net_settings_ip_caption">Name of IP of data host:</string>
+	<string name="net_settings_port_caption">Port of data host:</string>
+    
+</resources>
