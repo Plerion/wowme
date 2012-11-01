@@ -2,7 +2,6 @@ package de.cromon.graphics;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
 import java.text.NumberFormat;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -15,12 +14,11 @@ import de.cromon.graphics.ui.TextElement;
 import de.cromon.math.Matrix;
 import de.cromon.math.Vector2;
 import de.cromon.math.Vector3;
-import de.cromon.wowme.Game;
+import de.cromon.math.ViewFrustum;
 
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
-import android.util.Log;
 
 public class GLDevice implements Renderer {
 
@@ -60,6 +58,8 @@ public class GLDevice implements Renderer {
 		mWidth = width;
 		mHeight = height;
 		mWorldPosElem.Position = new Vector2(width - 500, 30);
+		
+		mViewFrustum.updateFrustum(Matrix.multiply(getActiveCamera().getMatView(), PerspectiveMatrix));
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class GLDevice implements Renderer {
 		gl.glClearColor(0.5f,  0.75f,  0.6f,  1);
 		mButton = new Button(100, 100, 79 * 1.5f, 22 * 1.5f);
 		mTestADT = new ADTFile("World/Maps/Kalimdor/Kalimdor_40_29.adt");
-		mCamera = new Camera();
+		mCamera = new Camera(this);
 		mInfoRender = new FontRender("Calibri-24");
 		mWorldPosElem = new TextElement();
 		mWorldPosElem.FitHeight = false;
@@ -80,6 +80,10 @@ public class GLDevice implements Renderer {
 		mFpsFormater.setMaximumFractionDigits(2);
 		mFpsFormater.setMinimumFractionDigits(2);
 		mFpsFormater.setGroupingUsed(false);
+	}
+	
+	public void onViewMatrixChanged() {
+		mViewFrustum.updateFrustum(Matrix.multiply(getActiveCamera().getMatView(), PerspectiveMatrix));
 	}
 	
 	public Camera getActiveCamera() {
@@ -97,7 +101,6 @@ public class GLDevice implements Renderer {
 		
 		mDepthReadBuffer.position(0);
 		GLES20.glReadPixels((int)screenPos.x, (int)screenPos.y, 1, 1, GLES20.GL_DEPTH_COMPONENT, GLES20.GL_FLOAT, mDepthReadBuffer);
-		int error = GLES20.glGetError();
 		mDepthReadBuffer.position(0);
 		
 		float depth = mDepthReadBuffer.getFloat();
@@ -110,16 +113,22 @@ public class GLDevice implements Renderer {
 		return new Vector3(objPosition[0] / objPosition[3], objPosition[1] / objPosition[3], objPosition[2] / objPosition[3]);
 	}
 	
+	public ViewFrustum getViewFrustum() {
+		return mViewFrustum;
+	}
+	
 	public Matrix OrthoMatrix = new Matrix();
 	public Matrix PerspectiveMatrix = new Matrix();
 	private Button mButton;
 	private ADTFile mTestADT;
 	private Camera mCamera;
+	@SuppressWarnings("unused")
 	private int mWidth, mHeight;
 	private ByteBuffer mDepthReadBuffer = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
 	private long mLastFrameTime = 0;
 	private int mFrameCount = 0;
 	private NumberFormat mFpsFormater = NumberFormat.getInstance();
+	private ViewFrustum mViewFrustum = new ViewFrustum();
 	
 	private FontRender mInfoRender;
 	private TextElement mWorldPosElem;

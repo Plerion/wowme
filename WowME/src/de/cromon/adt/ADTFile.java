@@ -1,7 +1,6 @@
 package de.cromon.adt;
 
 import java.io.IOException;
-import java.io.StreamCorruptedException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,7 +9,6 @@ import android.util.Log;
 
 import de.cromon.graphics.ShaderProgram;
 import de.cromon.io.DataLinkStream;
-import de.cromon.math.Matrix;
 import de.cromon.wowme.Game;
 
 public class ADTFile {
@@ -134,6 +132,7 @@ public class ADTFile {
 	private DataLinkStream mFileStream;
 	private Thread mAsyncLoader;
 	private int mLoadMask = 0;
+	@SuppressWarnings("unused")
 	private MHDR mHeader;
 	private List<ADTChunkData> mChunkData = new LinkedList<ADTChunkData>();
 	private List<MapChunkRender> mChunkRenders = new LinkedList<MapChunkRender>();

@@ -1,6 +1,5 @@
 package de.cromon.graphics;
 
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.MotionEvent.PointerCoords;
 import de.cromon.input.TouchListener;
@@ -10,9 +9,10 @@ import de.cromon.math.Vector3;
 import de.cromon.wowme.Game;
 
 public class Camera implements TouchListener {
-	public Camera() {
+	public Camera(GLDevice device) {
 		mMatView = Matrix.LookAt(mPosition, mTarget, mUp);
 		Game.Instance.getInputMgr().addTouchListener(this);
+		mDevice = device;
 	}
 	
 	public Matrix getMatView() {
@@ -83,6 +83,8 @@ public class Camera implements TouchListener {
 			mTarget = Vector3.add(mPosition, mFront);
 			
 			mZoomLastDistance = curDist;
+			
+			mDevice.onViewMatrixChanged();
 		}
 	}
 	
@@ -107,6 +109,7 @@ public class Camera implements TouchListener {
 			
 			mMatView = Matrix.LookAt(mPosition, mTarget, mUp);
 			mTouchLastPosition = new Vector2(curPos.x, curPos.y);
+			mDevice.onViewMatrixChanged();
 		}
 	}
 	
@@ -158,6 +161,7 @@ public class Camera implements TouchListener {
 	
 	private Vector2 mTouchLastPosition;
 	private float mZoomLastDistance;
+	private GLDevice mDevice;
 	
 	Vector3 mFront = new Vector3(1, 0, 0);
 	Vector3 mRight = new Vector3(0, -1, 0);

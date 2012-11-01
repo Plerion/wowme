@@ -2,7 +2,7 @@ package de.cromon.math;
 
 public class Plane {
 	public Plane() {
-		mNormal = new Vector3();
+		normal = new Vector3();
 		d = 0.0f;
 	}
 	
@@ -10,31 +10,31 @@ public class Plane {
 		Vector3 d1 = Vector3.sub(v1, v2);
 		Vector3 d2 = Vector3.sub(v3, v2);
 		
-		mNormal = Vector3.cross(d1, d2);
-		mNormal.normalize();
+		normal = Vector3.cross(d1, d2);
+		normal.normalize();
 		
-		d = -Vector3.dot(mNormal, v2);
+		d = -Vector3.dot(normal, v2);
 	}
 	
 	public void setNormalPoint(Vector3 normal, Vector3 point) {
-		mNormal = normal;
-		mNormal.normalize();
+		this.normal = normal;
+		this.normal.normalize();
 		
-		d = -Vector3.dot(mNormal, point);
+		d = -Vector3.dot(this.normal, point);
 	}
 	
 	public void setCoeffs(float a, float b, float c, float d) {
-		mNormal = new Vector3(a, b, c);
-		float len = mNormal.length();
-		mNormal.normalize();
+		normal = new Vector3(a, b, c);
+		float len = normal.length();
+		normal.normalize();
 		
 		this.d = d / len;
 	}
 	
 	public float distance(Vector3 p) {
-		return (d + Vector3.dot(mNormal, p));
+		return (d + Vector3.dot(normal, p));
 	}
 	
-	private Vector3 mNormal;
-	private float d;
+	public Vector3 normal;
+	public float d;
 }
